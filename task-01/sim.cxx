@@ -2,13 +2,15 @@
 #include <stdlib.h>
 #include <iostream>
 
+#include "sim.hxx"
+
 static SDL_Renderer *Renderer = nullptr;
 static SDL_Window *Window = nullptr;
 
 void simInit()
 {
     SDL_Init(SDL_INIT_VIDEO);
-    SDL_Window *window = SDL_CreateWindow("Hello World!", 100, 100, 640, 480, SDL_WINDOW_SHOWN);
+    SDL_Window *window = SDL_CreateWindow("Hello World!", 100, 100, X_SIZE, Y_SIZE, SDL_WINDOW_SHOWN);
     if (window == nullptr)
     {
         std::cout << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;

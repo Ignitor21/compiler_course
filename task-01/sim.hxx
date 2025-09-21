@@ -1,7 +1,7 @@
 #pragma once
 
-static const int X_SIZE = 512;
-static const int Y_SIZE = 512;
+static const int X_SIZE = 640;
+static const int Y_SIZE = 480;
 
 void simInit();
 void app();
