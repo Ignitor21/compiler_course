@@ -2,8 +2,8 @@
 
 int main()
 {
-    simInit();
+    sim_init();
     app();
-    simExit();
+    sim_exit();
     return 0;
 }

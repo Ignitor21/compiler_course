@@ -3,9 +3,7 @@
 static const int X_SIZE = 640;
 static const int Y_SIZE = 480;
 
-void simInit();
+void sim_init();
 void app();
-void simExit();
-void simFlush();
-void simPutPixel(int x, int y, int argb);
-int simRand();
+void sim_exit();
+void sim_draw_circle(int x0, int y0, int radius);
