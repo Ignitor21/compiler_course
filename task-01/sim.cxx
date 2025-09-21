@@ -10,7 +10,7 @@ static SDL_Window *Window = nullptr;
 void sim_init()
 {
     SDL_Init(SDL_INIT_VIDEO);
-    Window = SDL_CreateWindow("Hello World!", 100, 100, X_SIZE, Y_SIZE, SDL_WINDOW_SHOWN);
+    Window = SDL_CreateWindow("Raytracing!", 100, 100, X_SIZE, Y_SIZE, SDL_WINDOW_SHOWN);
     if (Window == nullptr)
     {
         std::cout << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
@@ -27,15 +27,26 @@ void sim_init()
 
 void sim_exit()
 {
-    SDL_Event event;
-    while (1)
-    {
-        if (SDL_PollEvent(&event) && event.type == SDL_QUIT)
-            break;
-    }
     SDL_DestroyRenderer(Renderer);
     SDL_DestroyWindow(Window);
     SDL_Quit();
+}
+
+int sim_should_quit()
+{
+    SDL_Event event;
+    if (SDL_PollEvent(&event) && event.type == SDL_QUIT) 
+        return 1;
+
+    SDL_Delay(16);
+    SDL_RenderPresent(Renderer);
+    return 0;
+}
+
+void sim_flush()
+{
+    SDL_SetRenderDrawColor(Renderer, 0, 0, 0, 255);
+    SDL_RenderClear(Renderer);
 }
 
 void sim_draw_circle(int x0, int y0, int radius)
@@ -51,5 +62,4 @@ void sim_draw_circle(int x0, int y0, int radius)
                 SDL_RenderDrawPoint(Renderer, x0 + dx, y0 + dy);
         }
     }
-    SDL_RenderPresent(Renderer);
 }
