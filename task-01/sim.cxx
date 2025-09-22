@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <iostream>
 #include <math.h>
+#include <assert.h>
 
 #include "sim.hxx"
 
@@ -99,9 +100,20 @@ void sim_flush()
     SDL_RenderClear(Renderer);
 }
 
-void sim_draw_circle(int x0, int y0, int radius)
+void sim_put_pixel(int x, int y, int argb)
 {
-    SDL_SetRenderDrawColor(Renderer, 255, 0, 0, 255);
+    assert(0 <= x && x < SIM_X_SIZE && "Out of range");
+    assert(0 <= y && y < SIM_Y_SIZE && "Out of range");
+    Uint8 a = argb >> 24;
+    Uint8 r = (argb >> 16) & 0xFF;
+    Uint8 g = (argb >> 8) & 0xFF;
+    Uint8 b = argb & 0xFF;
+    SDL_SetRenderDrawColor(Renderer, r, g, b, a);
+    SDL_RenderDrawPoint(Renderer, x, y);
+}
+
+void sim_draw_circle(int x0, int y0, int radius, int argb)
+{
     for (int w = 0; w < 2 * radius; w++)
     {
         for (int h = 0; h < 2 * radius; h++)
@@ -109,9 +121,24 @@ void sim_draw_circle(int x0, int y0, int radius)
             int dx = radius - w;
             int dy = radius - h;
             if ((dx*dx + dy*dy) <= (radius * radius))
-                SDL_RenderDrawPoint(Renderer, x0 + dx, y0 + dy);
+                sim_put_pixel(x0 + dx, y0 + dy, argb);
         }
     }
+}
+
+void sim_draw_line(int x0, int y0, int x1, int y1, int argb)
+{
+    assert(0 <= x0 && x0 < SIM_X_SIZE && "Out of range");
+    assert(0 <= y0 && y0 < SIM_Y_SIZE && "Out of range");
+    assert(0 <= x1 && x1 < SIM_X_SIZE && "Out of range");
+    assert(0 <= y1 && y1 < SIM_Y_SIZE && "Out of range");
+    Uint8 a = argb >> 24;
+    Uint8 r = (argb >> 16) & 0xFF;
+    Uint8 g = (argb >> 8) & 0xFF;
+    Uint8 b = argb & 0xFF;
+
+    SDL_SetRenderDrawColor(Renderer, r, g, b, a);
+    SDL_RenderDrawLine(Renderer, x0, y0, x1, y1);
 }
 
 int sim_calculate_ray_length()
@@ -140,7 +167,7 @@ int get_cos_precise(int angle_quarter_degrees) {
     return get_sin_precise(angle_quarter_degrees + 360);
 }
 
-void sim_draw_rays(int x0, int y0, int rays_number, int ray_length)
+void sim_draw_rays(int x0, int y0, int rays_number, int ray_length, int argb)
 {
     int angle_step = (360 * 4) / rays_number;
 
@@ -154,6 +181,6 @@ void sim_draw_rays(int x0, int y0, int rays_number, int ray_length)
         int x1 = x0 + (cos_val * ray_length) / 65535;
         int y1 = y0 + (sin_val * ray_length) / 65535;
 
-        SDL_RenderDrawLine(Renderer, x0, y0, x1, y1);
+        sim_draw_line(x0, y0, x1, y1, argb);
     }
 }
