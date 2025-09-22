@@ -53,7 +53,6 @@ void draw_rays(int x0, int y0, int rays_number, int ray_length, int argb)
     }
 }
 
-
 void app() 
 {
     int radius = 30;
@@ -67,6 +66,8 @@ void app()
     {
         if (sim_should_quit())
             return;
+
+        sim_flush();
 
         int x = 0, y = 0;
         if (pos < X_SIZE - 2 * radius)
@@ -90,7 +91,7 @@ void app()
             y = (Y_SIZE - radius) - (pos - 2 * (X_SIZE - 2 * radius) - (Y_SIZE - 2 * radius));
         }
         
-        sim_flush();
+        draw_circle(X_SIZE / 2, Y_SIZE / 2, 2 * radius, 0xFF0000FF);
         draw_circle(x, y, radius, 0xFFFF0000);
         draw_rays(x, y, rays_number, ray_length, 0xFFFF0000);
         pos += speed;
