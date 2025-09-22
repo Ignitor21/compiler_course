@@ -9,55 +9,6 @@
 static SDL_Renderer *Renderer = nullptr;
 static SDL_Window *Window = nullptr;
 
-static const int sin_table_precise[] = {
-0, 286, 572, 858, 1144, 1430, 1716, 2001,
-2287, 2573, 2859, 3144, 3430, 3715, 4001, 4286,
-4571, 4857, 5142, 5427, 5712, 5997, 6281, 6566,
-6850, 7135, 7419, 7703, 7987, 8270, 8554, 8837,
-9121, 9404, 9687, 9969, 10252, 10534, 10816, 11098,
-11380, 11662, 11943, 12224, 12505, 12785, 13066, 13346,
-13625, 13905, 14184, 14463, 14742, 15021, 15299, 15577,
-15854, 16132, 16409, 16685, 16962, 17238, 17513, 17789,
-18064, 18339, 18613, 18887, 19161, 19434, 19707, 19979,
-20251, 20523, 20795, 21066, 21336, 21606, 21876, 22145,
-22414, 22683, 22951, 23218, 23486, 23752, 24019, 24284,
-24550, 24815, 25079, 25343, 25607, 25870, 26132, 26394,
-26655, 26916, 27177, 27437, 27696, 27955, 28214, 28471,
-28729, 28985, 29242, 29497, 29752, 30007, 30261, 30514,
-30767, 31019, 31271, 31522, 31772, 32022, 32271, 32520,
-32767, 33015, 33262, 33508, 33753, 33998, 34242, 34485,
-34728, 34970, 35212, 35453, 35693, 35932, 36171, 36409,
-36647, 36883, 37119, 37355, 37589, 37823, 38056, 38289,
-38521, 38751, 38982, 39211, 39440, 39668, 39895, 40122,
-40347, 40572, 40796, 41020, 41243, 41464, 41685, 41906,
-42125, 42344, 42562, 42779, 42995, 43210, 43425, 43639,
-43851, 44064, 44275, 44485, 44695, 44903, 45111, 45318,
-45524, 45730, 45934, 46138, 46340, 46542, 46743, 46943,
-47142, 47340, 47537, 47734, 47929, 48124, 48317, 48510,
-48702, 48893, 49083, 49272, 49460, 49647, 49833, 50018,
-50203, 50386, 50568, 50750, 50930, 51110, 51288, 51466,
-51642, 51818, 51992, 52166, 52339, 52510, 52681, 52850,
-53019, 53187, 53353, 53519, 53683, 53847, 54009, 54171,
-54331, 54490, 54649, 54806, 54962, 55117, 55272, 55425,
-55577, 55728, 55878, 56027, 56174, 56321, 56467, 56611,
-56755, 56897, 57039, 57179, 57318, 57456, 57593, 57729,
-57864, 57998, 58130, 58262, 58392, 58521, 58650, 58777,
-58902, 59027, 59151, 59273, 59395, 59515, 59634, 59752,
-59869, 59985, 60100, 60213, 60325, 60436, 60546, 60655,
-60763, 60870, 60975, 61079, 61182, 61284, 61385, 61484,
-61583, 61680, 61776, 61871, 61965, 62057, 62148, 62239,
-62327, 62415, 62502, 62587, 62671, 62754, 62836, 62917,
-62996, 63075, 63152, 63227, 63302, 63375, 63448, 63519,
-63588, 63657, 63724, 63790, 63855, 63919, 63982, 64043,
-64103, 64162, 64219, 64276, 64331, 64385, 64438, 64489,
-64539, 64588, 64636, 64683, 64728, 64772, 64815, 64857,
-64897, 64936, 64974, 65011, 65047, 65081, 65114, 65145,
-65176, 65205, 65233, 65260, 65286, 65310, 65333, 65355,
-65375, 65395, 65413, 65430, 65445, 65460, 65473, 65484,
-65495, 65504, 65513, 65519, 65525, 65529, 65533, 65534,
-65535
-};
-
 void sim_init()
 {
     SDL_Init(SDL_INIT_VIDEO);
@@ -83,6 +34,12 @@ void sim_exit()
     SDL_Quit();
 }
 
+void sim_flush()
+{
+    SDL_SetRenderDrawColor(Renderer, 0, 0, 0, 255);
+    SDL_RenderClear(Renderer);
+}
+
 int sim_should_quit()
 {
     SDL_Event event;
@@ -92,12 +49,6 @@ int sim_should_quit()
     SDL_Delay(16);
     SDL_RenderPresent(Renderer);
     return 0;
-}
-
-void sim_flush()
-{
-    SDL_SetRenderDrawColor(Renderer, 0, 0, 0, 255);
-    SDL_RenderClear(Renderer);
 }
 
 void sim_put_pixel(int x, int y, int argb)
@@ -110,20 +61,6 @@ void sim_put_pixel(int x, int y, int argb)
     Uint8 b = argb & 0xFF;
     SDL_SetRenderDrawColor(Renderer, r, g, b, a);
     SDL_RenderDrawPoint(Renderer, x, y);
-}
-
-void sim_draw_circle(int x0, int y0, int radius, int argb)
-{
-    for (int w = 0; w < 2 * radius; w++)
-    {
-        for (int h = 0; h < 2 * radius; h++)
-        {
-            int dx = radius - w;
-            int dy = radius - h;
-            if ((dx*dx + dy*dy) <= (radius * radius))
-                sim_put_pixel(x0 + dx, y0 + dy, argb);
-        }
-    }
 }
 
 void sim_draw_line(int x0, int y0, int x1, int y1, int argb)
@@ -144,43 +81,4 @@ void sim_draw_line(int x0, int y0, int x1, int y1, int argb)
 int sim_calculate_ray_length()
 {
     return sqrt(X_SIZE * X_SIZE + Y_SIZE * Y_SIZE);    
-}
-
-int get_sin_precise(int angle_quarter_degrees)
-{
-    while (angle_quarter_degrees < 0)
-        angle_quarter_degrees += 1440;
-    while (angle_quarter_degrees >= 1440)
-        angle_quarter_degrees %= 1440;
-
-    if (angle_quarter_degrees <= 360)
-        return sin_table_precise[angle_quarter_degrees];
-    else if (angle_quarter_degrees <= 720)
-        return sin_table_precise[720 - angle_quarter_degrees];
-    else if (angle_quarter_degrees <= 1080)
-        return -sin_table_precise[angle_quarter_degrees - 720];
-    else
-        return -sin_table_precise[1440 - angle_quarter_degrees];
-}
-
-int get_cos_precise(int angle_quarter_degrees) {
-    return get_sin_precise(angle_quarter_degrees + 360);
-}
-
-void sim_draw_rays(int x0, int y0, int rays_number, int ray_length, int argb)
-{
-    int angle_step = (360 * 4) / rays_number;
-
-    for (int i = 0; i < rays_number; ++i)
-    {
-        int angle = i * angle_step;
-
-        int sin_val = get_sin_precise(angle);
-        int cos_val = get_cos_precise(angle);
-
-        int x1 = x0 + (cos_val * ray_length) / 65535;
-        int y1 = y0 + (sin_val * ray_length) / 65535;
-
-        sim_draw_line(x0, y0, x1, y1, argb);
-    }
 }
