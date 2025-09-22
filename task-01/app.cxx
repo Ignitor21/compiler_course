@@ -40,7 +40,7 @@ int get_cos_precise(int angle_quarter_degrees) {
     return get_sin_precise(angle_quarter_degrees + 360);
 }
 
-int has_intercept(int x0, int y0, int x1, int y1, int xc, int yc, int radius)
+int has_interception(int x0, int y0, int x1, int y1, int xc, int yc, int radius)
 {
     int num = (y1 - y0) * xc - (x1 - x0) * yc + x1 * y0 - y1 * x0;
     if (num < 0)
@@ -57,6 +57,12 @@ int has_intercept(int x0, int y0, int x1, int y1, int xc, int yc, int radius)
     return 0;
 }
 
+void calc_interception(int x0, int y0, int x1, int y1, int xc, int yc, int radius, int* x2, int* y2)
+{
+    
+
+}
+
 void draw_rays(int x0, int y0, int radius, int rays_number, int ray_length, int argb)
 {
     int angle_step = (360 * 4) / rays_number;
@@ -71,8 +77,14 @@ void draw_rays(int x0, int y0, int radius, int rays_number, int ray_length, int 
         int x1 = x0 + (cos_val * ray_length) / 65535;
         int y1 = y0 + (sin_val * ray_length) / 65535;
         
-        if (!has_intercept(x0, y0, x1, y1, X_SIZE / 2, Y_SIZE / 2, radius))
+        if (!has_interception(x0, y0, x1, y1, X_SIZE / 2, Y_SIZE / 2, radius))
             sim_draw_line(x0, y0, x1, y1, argb);
+        else
+        {
+            int x2 = 0, y2 = 0;
+            calc_interception(x0, y0, x1, y1, X_SIZE / 2, Y_SIZE / 2, radius, &x2, &y2);
+            sim_draw_line(x0, y0, x2, y2, argb);
+        }
     }
 }
 
