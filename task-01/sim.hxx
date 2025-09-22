@@ -59,4 +59,4 @@ void sim_flush();
 int sim_should_quit();
 void sim_put_pixel(int x, int y, int argb);
 void sim_draw_line(int x0, int y0, int x1, int y1, int argb);
-int sim_calculate_ray_length();
+int sim_sqrt(int x);

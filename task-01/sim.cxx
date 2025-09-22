@@ -46,7 +46,7 @@ int sim_should_quit()
     if (SDL_PollEvent(&event) && event.type == SDL_QUIT) 
         return 1;
 
-    SDL_Delay(16);
+    SDL_Delay(5);
     SDL_RenderPresent(Renderer);
     return 0;
 }
@@ -78,7 +78,7 @@ void sim_draw_line(int x0, int y0, int x1, int y1, int argb)
     SDL_RenderDrawLine(Renderer, x0, y0, x1, y1);
 }
 
-int sim_calculate_ray_length()
+int sim_sqrt(int x)
 {
-    return sqrt(X_SIZE * X_SIZE + Y_SIZE * Y_SIZE);    
+    return sqrt(x);    
 }

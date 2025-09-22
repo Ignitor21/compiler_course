@@ -1,5 +1,10 @@
 #include "sim.hxx"
 
+int calculate_ray_length()
+{
+    return sim_sqrt(X_SIZE * X_SIZE + Y_SIZE * Y_SIZE);
+}
+
 void draw_circle(int x0, int y0, int radius, int argb)
 {
     for (int w = 0; w < 2 * radius; w++)
@@ -35,7 +40,24 @@ int get_cos_precise(int angle_quarter_degrees) {
     return get_sin_precise(angle_quarter_degrees + 360);
 }
 
-void draw_rays(int x0, int y0, int rays_number, int ray_length, int argb)
+int has_intercept(int x0, int y0, int x1, int y1, int xc, int yc, int radius)
+{
+    int num = (y1 - y0) * xc - (x1 - x0) * yc + x1 * y0 - y1 * x0;
+    if (num < 0)
+        num = -num;
+
+    int denum = sim_sqrt((y1 - y0) * (y1 - y0) + (x1 - x0) * (x1 - x0));
+    int distance = num / denum;
+
+    if (distance > radius)
+        return 0;
+    
+    if ((x0 - xc) * (x0 - x1) > 0 || (y0 - yc) * (y0 - y1) > 0)
+        return 1;
+    return 0;
+}
+
+void draw_rays(int x0, int y0, int radius, int rays_number, int ray_length, int argb)
 {
     int angle_step = (360 * 4) / rays_number;
 
@@ -48,8 +70,9 @@ void draw_rays(int x0, int y0, int rays_number, int ray_length, int argb)
 
         int x1 = x0 + (cos_val * ray_length) / 65535;
         int y1 = y0 + (sin_val * ray_length) / 65535;
-
-        sim_draw_line(x0, y0, x1, y1, argb);
+        
+        if (!has_intercept(x0, y0, x1, y1, X_SIZE / 2, Y_SIZE / 2, radius))
+            sim_draw_line(x0, y0, x1, y1, argb);
     }
 }
 
@@ -60,7 +83,7 @@ void app()
     int pos = 0;
     int speed = 4;
     int rays_number = 720;
-    int ray_length = sim_calculate_ray_length();
+    int ray_length = calculate_ray_length();
 
     while (1)
     {
@@ -93,11 +116,10 @@ void app()
         
         draw_circle(X_SIZE / 2, Y_SIZE / 2, 2 * radius, 0xFF0000FF);
         draw_circle(x, y, radius, 0xFFFF0000);
-        draw_rays(x, y, rays_number, ray_length, 0xFFFF0000);
-        pos += speed;
+        draw_rays(x, y, 2 * radius, rays_number, ray_length, 0xFFFF0000);
 
+        pos += speed;
         if (pos >= perimeter)
             pos = 0;
-
     }
 }
