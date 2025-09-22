@@ -6,7 +6,9 @@ void app()
     int perimeter = 2 * (X_SIZE + Y_SIZE - 4 * radius);
     int pos = 0;
     int speed = 4;
-    
+    int rays_number = 360;
+    int ray_length = sim_calculate_ray_length();
+
     while (1)
     {
         if (sim_should_quit())
@@ -36,6 +38,7 @@ void app()
         
         sim_flush();
         sim_draw_circle(x, y, radius);
+        sim_draw_rays(x, y, rays_number, ray_length);
         pos += speed;
 
         if (pos >= perimeter)
