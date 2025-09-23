@@ -53,8 +53,6 @@ int sim_should_quit()
 
 void sim_put_pixel(int x, int y, int argb)
 {
-    assert(0 <= x && x < SIM_X_SIZE && "Out of range");
-    assert(0 <= y && y < SIM_Y_SIZE && "Out of range");
     Uint8 a = argb >> 24;
     Uint8 r = (argb >> 16) & 0xFF;
     Uint8 g = (argb >> 8) & 0xFF;
@@ -65,10 +63,6 @@ void sim_put_pixel(int x, int y, int argb)
 
 void sim_draw_line(int x0, int y0, int x1, int y1, int argb)
 {
-    assert(0 <= x0 && x0 < SIM_X_SIZE && "Out of range");
-    assert(0 <= y0 && y0 < SIM_Y_SIZE && "Out of range");
-    assert(0 <= x1 && x1 < SIM_X_SIZE && "Out of range");
-    assert(0 <= y1 && y1 < SIM_Y_SIZE && "Out of range");
     Uint8 a = argb >> 24;
     Uint8 r = (argb >> 16) & 0xFF;
     Uint8 g = (argb >> 8) & 0xFF;

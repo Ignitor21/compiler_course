@@ -59,9 +59,32 @@ int has_interception(int x0, int y0, int x1, int y1, int xc, int yc, int radius)
 
 void calc_interception(int x0, int y0, int x1, int y1, int xc, int yc, int radius, int* x2, int* y2)
 {
+    int l0 = sim_sqrt((xc - x0) * (xc - x0) + (yc - y0) * (yc - y0)) - radius;
+    int dx = x1 - x0;
+    int dy = y1 - y0;
+    int dl = sim_sqrt(dx * dx + dy * dy);
     
-
-}
+    int left = l0;
+    int right = l0 + radius;
+    
+    while (left <= right)
+    {
+        int mid = (left + right) / 2;
+        int x_mid = x0 + (dx * mid) / dl;
+        int y_mid = y0 + (dy * mid) / dl;
+        
+        int dist_sq = (x_mid - xc) * (x_mid - xc) + (y_mid - yc) * (y_mid - yc);
+        int radius_sq = radius * radius;
+        
+        if (dist_sq <= radius_sq)
+            right = mid - 1;
+        else
+            left = mid + 1;
+    }
+    
+    *x2 = x0 + (dx * left) / dl;
+    *y2 = y0 + (dy * left) / dl;
+} 
 
 void draw_rays(int x0, int y0, int radius, int rays_number, int ray_length, int argb)
 {
