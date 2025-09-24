@@ -1,4 +1,4 @@
-#include "sim.hxx"
+#include "sim.h"
 
 int main()
 {

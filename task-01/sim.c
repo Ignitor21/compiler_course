@@ -1,46 +1,46 @@
 #include <SDL2/SDL.h>
 #include <stdlib.h>
-#include <iostream>
+#include <stdio.h>
 #include <math.h>
 #include <assert.h>
 
-#include "sim.hxx"
+#include "sim.h"
 
-static SDL_Renderer *Renderer = nullptr;
-static SDL_Window *Window = nullptr;
+static SDL_Renderer *Renderer = NULL;
+static SDL_Window *Window = NULL;
 
-void sim_init()
+void sim_init(void)
 {
     SDL_Init(SDL_INIT_VIDEO);
     Window = SDL_CreateWindow("Raytracing!", 100, 100, X_SIZE, Y_SIZE, SDL_WINDOW_SHOWN);
-    if (Window == nullptr)
+    if (!Window)
     {
-        std::cout << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
-	return;
+        printf("SDL_CreateWindow Error: %s\n", SDL_GetError());
+	exit(1);
     }
 
     Renderer = SDL_CreateRenderer(Window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-    if (Renderer == nullptr)
+    if (!Renderer)
     {
-        std::cout << "SDL_CreateRenderer Error: " << SDL_GetError() << std::endl;
-        return;
+        printf("SDL_CreateRenderer Error: %s\n", SDL_GetError());
+	exit(1);
     }
 }
 
-void sim_exit()
+void sim_exit(void)
 {
     SDL_DestroyRenderer(Renderer);
     SDL_DestroyWindow(Window);
     SDL_Quit();
 }
 
-void sim_flush()
+void sim_flush(void)
 {
     SDL_SetRenderDrawColor(Renderer, 0, 0, 0, 255);
     SDL_RenderClear(Renderer);
 }
 
-int sim_should_quit()
+int sim_should_quit(void)
 {
     SDL_Event event;
     if (SDL_PollEvent(&event) && event.type == SDL_QUIT) 

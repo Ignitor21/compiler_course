@@ -1,6 +1,6 @@
-#include "sim.hxx"
+#include "sim.h"
 
-int calculate_ray_length()
+int calculate_ray_length(void)
 {
     return sim_sqrt(X_SIZE * X_SIZE + Y_SIZE * Y_SIZE);
 }
@@ -111,7 +111,7 @@ void draw_rays(int x0, int y0, int radius, int rays_number, int ray_length, int 
     }
 }
 
-void app() 
+void app(void) 
 {
     int radius = 30;
     int perimeter = 2 * (X_SIZE + Y_SIZE - 4 * radius);
