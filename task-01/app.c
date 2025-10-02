@@ -19,27 +19,6 @@ void draw_circle(int x0, int y0, int radius, int argb)
     }
 }
 
-int get_sin_precise(int angle_quarter_degrees)
-{
-    while (angle_quarter_degrees < 0)
-        angle_quarter_degrees += 1440;
-    while (angle_quarter_degrees >= 1440)
-        angle_quarter_degrees %= 1440;
-
-    if (angle_quarter_degrees <= 360)
-        return sin_table_precise[angle_quarter_degrees];
-    else if (angle_quarter_degrees <= 720)
-        return sin_table_precise[720 - angle_quarter_degrees];
-    else if (angle_quarter_degrees <= 1080)
-        return -sin_table_precise[angle_quarter_degrees - 720];
-    else
-        return -sin_table_precise[1440 - angle_quarter_degrees];
-}
-
-int get_cos_precise(int angle_quarter_degrees) {
-    return get_sin_precise(angle_quarter_degrees + 360);
-}
-
 int has_interception(int x0, int y0, int x1, int y1, int xc, int yc, int radius)
 {
     int num = (y1 - y0) * xc - (x1 - x0) * yc + x1 * y0 - y1 * x0;
