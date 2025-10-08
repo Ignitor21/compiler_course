@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.18)
 
-project(compiler_course LANGUAGES C)
+project(compiler_course LANGUAGES C CXX)
 
 if (${PROJECT_SOURCE_DIR} STREQUAL ${PROJECT_BINARY_DIR})
     message(FATAL_ERROR "In-source build is forbidden")
@@ -15,5 +15,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 find_package(SDL2 REQUIRED)
+find_package(LLVM REQUIRED)
 
 add_subdirectory(task-01)
+add_subdirectory(task-02)
