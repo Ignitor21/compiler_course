@@ -5,7 +5,7 @@ set(APP_DIR ${PROJECT_SOURCE_DIR}/task-01)
 add_library(app_logic_instrumented OBJECT ${APP_DIR}/app.c)
 add_dependencies(app_logic_instrumented instr_logger_pass)
 target_include_directories(app_logic_instrumented PUBLIC ${APP_DIR})
-target_compile_options(app_logic_instrumented PRIVATE -fpass-plugin=$<TARGET_FILE:instr_logger_pass>)
+target_compile_options(app_logic_instrumented PRIVATE -O2 -fpass-plugin=$<TARGET_FILE:instr_logger_pass>)
 
 add_executable(task-02 ${APP_DIR}/start.c ${APP_DIR}/sim.c logger.cpp)
 target_link_libraries(task-02 PRIVATE LLVM app_logic_instrumented ${SDL2_LIBRARIES} m)
